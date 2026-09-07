@@ -31,8 +31,9 @@ function Toast({ message, type }) {
   if (!message) return null;
   return (
     <div
-      className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white font-medium transition-all transform z-50 ${type === "success" ? "bg-green-600" : "bg-red-600"
-        }`}
+      className={`fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white font-medium transition-all transform z-50 ${
+        type === "success" ? "bg-green-600" : "bg-red-600"
+      }`}
     >
       {message}
     </div>
@@ -316,29 +317,29 @@ export default function Tasks() {
 
             {/* Notes Popover */}
           </div>
-          {isNotesOpen && (
-            <>
-              {/* Mobile View - No Overlap */}
-              <div className="block md:hidden w-full mt-4 max-h-[50vh] overflow-y-auto notes-scroll">
-                <NotesWidget />
-              </div>
+{isNotesOpen && (
+  <>
+    {/* Mobile View - No Overlap */}
+    <div className="block md:hidden w-full mt-4 max-h-[50vh] overflow-y-auto notes-scroll">
+      <NotesWidget />
+    </div>
 
-              {/* Desktop View - Popover */}
-              <div
-                className="
+    {/* Desktop View - Popover */}
+    <div
+      className="
         hidden md:block
         absolute top-full right-0 mt-3 z-50
         w-96
         bg-white dark:bg-slate-900
-        shadow-2xl rounded-2xl overflow-hidden
+        rounded-2xl shadow-2xl
         border border-gray-100 dark:border-slate-800
         max-h-[70vh] overflow-y-auto notes-scroll
       "
-              >
-                <NotesWidget />
-              </div>
-            </>
-          )}
+    >
+      <NotesWidget />
+    </div>
+  </>
+)}
         </div>
 
         {/* Bulk Edit Panel */}
@@ -703,12 +704,23 @@ export default function Tasks() {
                 setActualDuration(e.target.value);
                 if (durationError) setDurationError("");
               }}
-              className={`w-full p-2 border rounded-lg bg-transparent text-main dark:bg-slate-900 dark:text-slate-100 placeholder:text-muted dark:placeholder-slate-500 ${durationError ? "border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500" : "border-soft"
-                }`}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleActualDurationSubmit();
+                }
+              }}
+              aria-invalid={Boolean(durationError)}
+              aria-describedby={durationError ? "duration-error" : undefined}
+              className={`w-full p-2 border rounded-lg bg-transparent text-main dark:bg-slate-900 dark:text-slate-100 placeholder:text-muted dark:placeholder-slate-500 ${
+                durationError
+                  ? "border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500"
+                  : "border-soft"
+              }`}
               placeholder="Actual duration in minutes"
             />
             {durationError && (
-              <p className="mt-1 text-xs text-red-500 font-medium">
+              <p id="duration-error" role="alert" className="mt-1 text-xs text-red-500 font-medium">
                 {durationError}
               </p>
             )}
